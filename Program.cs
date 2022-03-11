@@ -10,15 +10,36 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var connectionString = builder.Configuration["DefaultConnection"];
+
+switch (ApplicationDbContext.ConnectionAddressString)
+{
+    case ApplicationDbContext.ConnectDatabaseStaging:
+    case ApplicationDbContext.ConnectDatabaseProcution:
+        connectionString = Environment.GetEnvironmentVariable("DefaultConnection");
+        break;
+}
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString));
+    options.UseNpgsql(connectionString!)
+);
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddUserStore<ApplicationUserStore>()
+    .AddRoleStore<ApplicationRoleStore>()
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
+
+builder.Services.AddAuthentication().AddCookie().AddTwitter(twitterOptions =>
+{
+    twitterOptions.ConsumerKey = builder.Configuration[Koeheya.Twitter.ConsumerKeyName];
+    twitterOptions.ConsumerSecret = builder.Configuration[Koeheya.Twitter.ConsumerKeySecretName];
+    twitterOptions.SignInScheme = IdentityConstants.ExternalScheme;
+    twitterOptions.SaveTokens = true;
+});
 
 var app = builder.Build();
 

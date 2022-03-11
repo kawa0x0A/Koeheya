@@ -1,5 +1,7 @@
 ﻿@page "/"
 
+@inject NavigationManager _navigationManager
+
 <PageTitle>Index</PageTitle>
 
 <h1>Hello, world!</h1>
@@ -7,3 +9,16 @@
 Welcome to your new app.
 
 <SurveyPrompt Title="How is Blazor working for you?" />
+
+<button type="button" class="btn bg-primary text-white" name="provider" value="Twitter" title="Log in using your Twitter account" @onclick="TwitterSignIn">
+    <i class="fab fa-fw fa-twitter"></i>
+    Sign in
+    Twitter
+</button>
+
+@code {
+    private void TwitterSignIn()
+    {
+        _navigationManager.NavigateTo("Twitter/TwitterSignIn", true);
+    }
+}
