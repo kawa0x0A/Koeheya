@@ -12,7 +12,7 @@ namespace Koeheya.Data
         [Column("UserId")]
         public int UserId { get; set; }
 
-        [NotMapped]
+        [Column("UserName")]
         public override string? UserName { get; set; }
         
         [NotMapped]

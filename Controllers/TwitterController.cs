@@ -33,11 +33,18 @@ namespace Koeheya.Controllers
 
             if (user == null)
             {
-                await applicationDbContext.ApplicationUsers!.AddAsync(new Data.ApplicationUser() { UserId = int.Parse(userId) });
+                await applicationDbContext.ApplicationUsers!.AddAsync(new Data.ApplicationUser() { UserId = int.Parse(userId), UserName = authenticateResult.Principal.Identity?.Name });
 
                 await applicationDbContext.SaveChangesAsync();
 
                 user = applicationDbContext.ApplicationUsers.Single();
+            }
+
+            if(user.UserName != authenticateResult.Principal.Identity?.Name)
+            {
+                applicationDbContext.ApplicationUsers!.Update(user);
+
+                await applicationDbContext.SaveChangesAsync();
             }
 
             await signInManager.ExternalLoginSignInAsync(authenticateResult.Principal.Identity!.AuthenticationType, user.UserId.ToString(), false);

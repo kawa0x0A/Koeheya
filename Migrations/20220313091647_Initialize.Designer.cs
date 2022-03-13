@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Koeheya.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220312114645_Initialize")]
+    [Migration("20220313091647_Initialize")]
     partial class Initialize
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,6 +32,10 @@ namespace Koeheya.Migrations
                         .HasColumnName("UserId");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("UserId"));
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("text")
+                        .HasColumnName("UserName");
 
                     b.HasKey("UserId");
 

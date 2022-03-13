@@ -1,12 +1,41 @@
-﻿<AuthorizeView>
+﻿@using Microsoft.AspNetCore.Identity
+@using Koeheya.Data
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+<AuthorizeView>
     <Authorized>
         <a href="Identity/Account/Manage">Hello, @context.User.Identity?.Name!</a>
-        <form method="post" action="Identity/Account/LogOut">
-            <button type="submit" class="nav-link btn btn-link">Log out</button>
-        </form>
-    </Authorized>
+        <div class="dropdown">
+            <button class="btn dropdown-toggle" id="dropdownMenuButton" type="button" data-toggle="dropdown" aria-expanded="false">
+                <img class="rounded-circle" src="@ProfileImageUrl" alt="ProfileImage"><img>
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <div class="dropdown-item">
+                    <a href="Setting" class="nav-link btn btn-link text-dark">Setting</a>
+                </div>
+                <div class="dropdown-item ">
+                    <a href="Identity/Account/Logout" class="nav-link btn btn-link text-dark">Logout</a>
+                </div>
+            </div>
+        </div>    </Authorized>
     <NotAuthorized>
         <a href="Identity/Account/Register">Register</a>
         <a href="Identity/Account/Login">Log in</a>
     </NotAuthorized>
 </AuthorizeView>
+
+@code{
+    private string ProfileImageUrl { get; set; } = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (SignInManager.IsSignedIn(SignInManager.Context.User))
+        {
+            var user = await UserManager.GetUserAsync(SignInManager.Context.User);
+
+            ProfileImageUrl = await Twitter.GetProfileImageUrlAsync(user.UserId);
+        }
+    }
+}

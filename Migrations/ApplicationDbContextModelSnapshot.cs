@@ -31,6 +31,10 @@ namespace Koeheya.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("UserId"));
 
+                    b.Property<string>("UserName")
+                        .HasColumnType("text")
+                        .HasColumnName("UserName");
+
                     b.HasKey("UserId");
 
                     b.ToTable("User");
