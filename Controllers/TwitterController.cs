@@ -49,7 +49,7 @@ namespace Koeheya.Controllers
 
             await signInManager.ExternalLoginSignInAsync(authenticateResult.Principal.Identity!.AuthenticationType, user.UserId.ToString(), false);
 
-            return Redirect("/");
+            return Redirect($"/{user.UserId}");
         }
     }
 }

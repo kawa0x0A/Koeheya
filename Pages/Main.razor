@@ -1,0 +1,35 @@
+﻿@page "/{UserId}"
+
+@inject Microsoft.AspNetCore.Identity.SignInManager<Data.ApplicationUser> SignInManager
+
+<h3>Main</h3>
+
+@if (@UserId == @SignInUserId)
+{
+    <div>true</div>
+}
+else
+{
+    <div>false</div>
+}
+
+@code {
+    [Parameter]
+    public string? UserId { get; set; }
+
+    private string? SignInUserId { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        var user = SignInManager.Context.User;
+
+        if (SignInManager.IsSignedIn(user))
+        {
+            SignInUserId = SignInManager.UserManager.GetUserId(user);
+
+            StateHasChanged();
+        }
+
+        base.OnParametersSet();
+    }
+}
