@@ -1,0 +1,27 @@
+﻿table {
+    display:table;
+    border-collapse: separate;
+    border-spacing: 0px;
+}
+
+.left {
+    border-left: 4px aqua solid;
+}
+
+.top {
+    border-top: 4px aqua solid;
+}
+
+.right {
+    border-right: 4px aqua solid;
+}
+
+.bottom {
+    border-bottom: 4px aqua solid;
+}
+
+.square {
+    width: 10%;
+    padding-top: 0px;
+    padding-bottom: 10%;
+}
