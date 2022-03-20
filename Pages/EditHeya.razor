@@ -13,10 +13,13 @@
     <tbody>
         @for(int y=0; y<10; y++)
         {
+            var captureY = y;
             <tr>
                 @for(int x=0; x<10; x++)
                 {
-                    <td class="@TableUtility.HeyaTableDataAttribute(Heyas!, x, y)"></td>
+                    var captureX = x;
+
+                    <td class="@TableUtility.HeyaTableDataAttribute(Heyas!, x, y)" @onclick="() => OnClickTableCell(captureX, captureY)"></td>
                 }
             </tr>
         }
@@ -27,7 +30,7 @@
 
 @code {
     private string? UserId { get; set; }
-    private Heya[]? Heyas { get; set; }
+    private List<Heya> Heyas { get; set; } = new List<Heya>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -37,9 +40,14 @@
 
         using var applicationDbContext = new ApplicationDbContext();
 
-        Heyas = applicationDbContext.Heyas!.Where(heya => heya.Owner == UserId).ToArray();
+        Heyas = applicationDbContext.Heyas!.Where(heya => heya.Owner == UserId).ToList();
 
         await base.OnInitializedAsync();
+    }
+
+    private void OnClickTableCell(int x, int y)
+    {
+        Heyas.Add(new Heya() { Id = Guid.NewGuid(), Owner = UserId, Name = "", X = x, Y = y, Width = 1, Height = 1 });
     }
 
     private void OnClickSaveButton()

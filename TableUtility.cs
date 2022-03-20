@@ -2,11 +2,11 @@
 {
     public static class TableUtility
     {
-        public static string HeyaTableDataAttribute(Data.Heya[] heyas, int x, int y)
+        public static string HeyaTableDataAttribute(IEnumerable<Data.Heya> heyas, int x, int y)
         {
             string classAttribute = "square";
 
-            if ((heyas == null) || (heyas.Length == 0))
+            if ((heyas == null) || (heyas.Count() == 0))
             {
                 return classAttribute;
             }
