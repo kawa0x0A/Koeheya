@@ -1,0 +1,28 @@
+﻿table {
+    display:table;
+}
+
+.left {
+    border-left: 4px blue solid;
+}
+
+.top {
+    border-top: 4px blue solid;
+}
+
+.right {
+    border-right: 4px blue solid;
+}
+
+.bottom {
+    border-bottom: 4px blue solid;
+}
+
+.heya {
+    background-color: aqua;
+}
+
+.square {
+    width: 10%;
+    padding-bottom: 10%;
+}

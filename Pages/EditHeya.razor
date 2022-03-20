@@ -2,21 +2,42 @@
 
 @attribute [Authorize]
 
+@using Data;
+
 @inject Microsoft.AspNetCore.Identity.SignInManager<Data.ApplicationUser> SignInManager
 @inject NavigationManager _navigationManager
 
 <h3>EditHeya</h3>
 
+<table class="table table-bordered table-responsive">
+    <tbody>
+        @for(int y=0; y<10; y++)
+        {
+            <tr>
+                @for(int x=0; x<10; x++)
+                {
+                    <td class="@TableUtility.HeyaTableDataAttribute(Heyas!, x, y)"></td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+
 <button @onclick="OnClickSaveButton">Save</button>
 
 @code {
-    public string? UserId { get; set; }
+    private string? UserId { get; set; }
+    private Heya[]? Heyas { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         var user = await SignInManager.UserManager.GetUserAsync(SignInManager.Context.User);
 
         UserId = user.UserId.ToString();
+
+        using var applicationDbContext = new ApplicationDbContext();
+
+        Heyas = applicationDbContext.Heyas!.Where(heya => heya.Owner == UserId).ToArray();
 
         await base.OnInitializedAsync();
     }
