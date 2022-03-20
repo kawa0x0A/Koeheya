@@ -1,7 +1,5 @@
 ﻿table {
     display:table;
-    border-collapse: separate;
-    border-spacing: 0px;
 }
 
 .left {
@@ -26,6 +24,5 @@
 
 .square {
     width: 10%;
-    padding-top: 0px;
     padding-bottom: 10%;
 }
