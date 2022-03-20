@@ -1,5 +1,8 @@
-﻿@page "/{UserId}/EditHeya"
+﻿@page "/EditHeya"
 
+@attribute [Authorize]
+
+@inject Microsoft.AspNetCore.Identity.SignInManager<Data.ApplicationUser> SignInManager
 @inject NavigationManager _navigationManager
 
 <h3>EditHeya</h3>
@@ -7,8 +10,16 @@
 <button @onclick="OnClickSaveButton">Save</button>
 
 @code {
-    [Parameter]
     public string? UserId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var user = await SignInManager.UserManager.GetUserAsync(SignInManager.Context.User);
+
+        UserId = user.UserId.ToString();
+
+        await base.OnInitializedAsync();
+    }
 
     private void OnClickSaveButton()
     {
