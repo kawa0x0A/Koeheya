@@ -73,7 +73,7 @@ else
             return classAttribute;
         }
 
-        if ((InnerWidthHeyas.Count() > 0) && (InnerHeightHeyas.Count() > 0))
+        if ((InnerWidthHeyas.Any(heya => ((heya.X <= x) && (x < (heya.X + heya.Width)))) && (InnerHeightHeyas.Any(heya => ((heya.Y <= y) && (y < (heya.Y + heya.Height)))))))
         {
             classAttribute += " heya";
         }
