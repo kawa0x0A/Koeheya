@@ -3,12 +3,15 @@
 @using Data;
 
 @inject Microsoft.AspNetCore.Identity.SignInManager<Data.ApplicationUser> SignInManager
+@inject NavigationManager _navigationManager
 
 <h3>Main</h3>
 
 @if (@UserId == @SignInUserId)
 {
     <div>true</div>
+
+    <button @onclick="OnClickEditButton">Edit</button>
 }
 else
 {
@@ -80,7 +83,7 @@ else
         {
             classAttribute += " left";
         }
-                
+
         if (InnerWidthHeyas.Any(heya => ((x + 1) == (heya.X + heya.Width))))
         {
             classAttribute += " right";
@@ -90,12 +93,17 @@ else
         {
             classAttribute += " top";
         }
-                
+
         if (InnerHeightHeyas.Any(heya => ((y + 1) == (heya.Y + heya.Height))))
         {
             classAttribute += " bottom";
         }
 
         return classAttribute;
+    }
+
+    private void OnClickEditButton()
+    {
+        _navigationManager.NavigateTo($"/{SignInUserId}/EditHeya");
     }
 }

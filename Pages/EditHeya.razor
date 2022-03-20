@@ -1,0 +1,17 @@
+﻿@page "/{UserId}/EditHeya"
+
+@inject NavigationManager _navigationManager
+
+<h3>EditHeya</h3>
+
+<button @onclick="OnClickSaveButton">Save</button>
+
+@code {
+    [Parameter]
+    public string? UserId { get; set; }
+
+    private void OnClickSaveButton()
+    {
+        _navigationManager.NavigateTo($"/{UserId}");
+    }
+}
