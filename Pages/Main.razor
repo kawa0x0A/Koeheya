@@ -45,8 +45,6 @@ else
         if (SignInManager.IsSignedIn(user))
         {
             SignInUserId = SignInManager.UserManager.GetUserId(user);
-
-            StateHasChanged();
         }
 
         using var applicationDbContext = new ApplicationDbContext();
