@@ -73,6 +73,11 @@ else
             return classAttribute;
         }
 
+        if ((InnerWidthHeyas.Count() > 0) && (InnerHeightHeyas.Count() > 0))
+        {
+            classAttribute += " heya";
+        }
+
         if (InnerWidthHeyas.Any(heya => (x == heya.X)))
         {
             classAttribute += " left";
@@ -82,6 +87,7 @@ else
         {
             classAttribute += " right";
         }
+
         if (InnerHeightHeyas.Any(heya => (y == heya.Y)))
         {
             classAttribute += " top";
