@@ -17,21 +17,22 @@
         @for(int y=0; y<10; y++)
         {
             var captureY = y;
+
             <tr class="row">
                 @for(int x=0; x<10; x++)
                 {
                     var captureX = x;
 
                     <td class="column">
-                        <div class="box" @onclick="() => OnClickTableCell(captureX, captureY)" draggable="true" @ondragstart="() => OnDragStartTableCellMove(captureX, captureY)" @ondrag="OnDragTableCell" @ondragend="OnDragEndTableCell">
-                            <div class="top" hidden="@HiddenEdge(captureX, captureY, HeyaStructEdgeType.Top)" draggable="true" @ondragstart="() => OnDragStartTableCellResizeTop(captureX, captureY)" @ondragstart:stopPropagation="true"></div>
-                            <div class="bottom" hidden="@HiddenEdge(captureX, captureY, HeyaStructEdgeType.Bottom)" draggable="true" @ondragstart="() => OnDragStartTableCellResizeBottom(captureX, captureY)" @ondragstart:stopPropagation="true"></div>
-                            <div class="left" hidden="@HiddenEdge(captureX, captureY, HeyaStructEdgeType.Left)" draggable="true" @ondragstart="() => OnDragStartTableCellResizeLeft(captureX, captureY)" @ondragstart:stopPropagation="true"></div>
-                            <div class="right" hidden="@HiddenEdge(captureX, captureY, HeyaStructEdgeType.Right)" draggable="true" @ondragstart="() => OnDragStartTableCellResizeRight(captureX, captureY)" @ondragstart:stopPropagation="true"></div>
-                            <div class="@GetVertexAttribute(captureX, captureY, HeyaStructVertexType.TopLeft)" hidden="@HiddenVertex(captureX, captureY, HeyaStructVertexType.TopLeft)" draggable="true" @ondragstart="() => GetVertexDragStartMethod(captureX, captureY, HeyaStructVertexType.TopLeft)" @ondragstart:stopPropagation="true"></div>
-                            <div class="@GetVertexAttribute(captureX, captureY, HeyaStructVertexType.TopRight)" hidden="@HiddenVertex(captureX, captureY, HeyaStructVertexType.TopRight)" draggable="true" @ondragstart="() => GetVertexDragStartMethod(captureX, captureY, HeyaStructVertexType.TopRight)" @ondragstart:stopPropagation="true"></div>
-                            <div class="@GetVertexAttribute(captureX, captureY, HeyaStructVertexType.BottomLeft)" hidden="@HiddenVertex(captureX, captureY, HeyaStructVertexType.BottomLeft)" draggable="true" @ondragstart="() => GetVertexDragStartMethod(captureX, captureY, HeyaStructVertexType.BottomLeft)" @ondragstart:stopPropagation="true"></div>
-                            <div class="@GetVertexAttribute(captureX, captureY, HeyaStructVertexType.BottomRight)" hidden="@HiddenVertex(captureX, captureY, HeyaStructVertexType.BottomRight)" draggable="true" @ondragstart="() => GetVertexDragStartMethod(captureX, captureY, HeyaStructVertexType.BottomRight)" @ondragstart:stopPropagation="true"></div>
+                        <div class="box" @onclick="BoxTemplate[captureY][captureX].OnClickBox" draggable="true" @ondragstart="BoxTemplate[captureY][captureX].OnDragStartBox" @ondrag="OnDragTableCell" @ondragend="OnDragEndTableCell">
+                            <div class="top" hidden="@HiddenEdge(captureX, captureY, HeyaStructEdgeType.Top)" draggable="true" @ondragstart="BoxTemplate[captureY][captureX].OnDragStartEdgeTop" @ondragstart:stopPropagation="true"></div>
+                            <div class="bottom" hidden="@HiddenEdge(captureX, captureY, HeyaStructEdgeType.Bottom)" draggable="true" @ondragstart="BoxTemplate[captureY][captureX].OnDragStartEdgeBottom" @ondragstart:stopPropagation="true"></div>
+                            <div class="left" hidden="@HiddenEdge(captureX, captureY, HeyaStructEdgeType.Left)" draggable="true" @ondragstart="BoxTemplate[captureY][captureX].OnDragStartEdgeLeft" @ondragstart:stopPropagation="true"></div>
+                            <div class="right" hidden="@HiddenEdge(captureX, captureY, HeyaStructEdgeType.Right)" draggable="true" @ondragstart="BoxTemplate[captureY][captureX].OnDragStartEdgeRight" @ondragstart:stopPropagation="true"></div>
+                            <div class="@GetVertexAttribute(captureX, captureY, HeyaStructVertexType.TopLeft)" hidden="@HiddenVertex(captureX, captureY, HeyaStructVertexType.TopLeft)" draggable="true" @ondragstart="BoxTemplate[captureY][captureX].OnDragStartVertexTopLeft" @ondragstart:stopPropagation="true"></div>
+                            <div class="@GetVertexAttribute(captureX, captureY, HeyaStructVertexType.TopRight)" hidden="@HiddenVertex(captureX, captureY, HeyaStructVertexType.TopRight)" draggable="true" @ondragstart="BoxTemplate[captureY][captureX].OnDragStartVertexTopRight" @ondragstart:stopPropagation="true"></div>
+                            <div class="@GetVertexAttribute(captureX, captureY, HeyaStructVertexType.BottomLeft)" hidden="@HiddenVertex(captureX, captureY, HeyaStructVertexType.BottomLeft)" draggable="true" @ondragstart="BoxTemplate[captureY][captureX].OnDragStartVertexBottomLeft" @ondragstart:stopPropagation="true"></div>
+                            <div class="@GetVertexAttribute(captureX, captureY, HeyaStructVertexType.BottomRight)" hidden="@HiddenVertex(captureX, captureY, HeyaStructVertexType.BottomRight)" draggable="true" @ondragstart="BoxTemplate[captureY][captureX].OnDragStartVertexBottomRight" @ondragstart:stopPropagation="true"></div>
                         </div>
                     </td>
                 }
@@ -57,7 +58,22 @@
         ResizeBottomRightCross,
     }
 
+    private class Box
+    {
+        public Action<MouseEventArgs> OnClickBox { get; set; } = (e) => { };
+        public Action<DragEventArgs> OnDragStartBox { get; set; } = (e) => { };
+        public Action<DragEventArgs> OnDragStartEdgeTop { get; set; } = (e) => { };
+        public Action<DragEventArgs> OnDragStartEdgeBottom { get; set; } = (e) => { };
+        public Action<DragEventArgs> OnDragStartEdgeLeft { get; set; } = (e) => { };
+        public Action<DragEventArgs> OnDragStartEdgeRight { get; set; } = (e) => { };
+        public Action<DragEventArgs> OnDragStartVertexTopLeft { get; set; } = (e) => { };
+        public Action<DragEventArgs> OnDragStartVertexTopRight { get; set; } = (e) => { };
+        public Action<DragEventArgs> OnDragStartVertexBottomLeft { get; set; } = (e) => { };
+        public Action<DragEventArgs> OnDragStartVertexBottomRight { get; set; } = (e) => { };
+    }
+
     private string? UserId { get; set; }
+    private Box[][] BoxTemplate { get; set; } = new Box[10][];
     private List<Heya> Heyas { get; set; } = new List<Heya>();
     private DragModeType CurrentDragModeType { get; set; }
     private Heya? CurrentDragHeya { get; set; }
@@ -66,6 +82,37 @@
     private int TableHeight { get; set; }
     private int TableOffsetLeft { get; set; }
     private int TableOffsetTop { get; set; }
+
+    protected override void OnInitialized()
+    {
+        // デリゲートの再生成を回避するために初期化処理の時点で定義する (イベントコールバックに直接ラムダ式を書くと部屋のドラッグ動作が重くなるので避ける)
+        for (int y = 0; y < 10; y++)
+        {
+            var captureY = y;
+
+            BoxTemplate[captureY] = new Box[10];
+
+            for (int x = 0; x < 10; x++)
+            {
+                var captureX = x;
+
+                BoxTemplate[y][x] = new Box();
+
+                BoxTemplate[y][x].OnClickBox = (e) => { OnClickTableCell(captureX, captureY); };
+                BoxTemplate[y][x].OnDragStartBox = async (e) => { await OnDragStartTableCellMove(captureX, captureY); };
+                BoxTemplate[y][x].OnDragStartEdgeTop = async (e) => { await OnDragStartTableCellResizeTop(captureX, captureY); };
+                BoxTemplate[y][x].OnDragStartEdgeBottom = async (e) => { await OnDragStartTableCellResizeBottom(captureX, captureY); };
+                BoxTemplate[y][x].OnDragStartEdgeLeft = async (e) => { await OnDragStartTableCellResizeLeft(captureX, captureY); };
+                BoxTemplate[y][x].OnDragStartEdgeRight = async (e) => { await OnDragStartTableCellResizeRight(captureX, captureY); };
+                BoxTemplate[y][x].OnDragStartVertexTopLeft = async (e) => { await GetVertexDragStartMethod(captureX, captureY, HeyaStructVertexType.TopLeft); };
+                BoxTemplate[y][x].OnDragStartVertexTopRight = async (e) => { await GetVertexDragStartMethod(captureX, captureY, HeyaStructVertexType.TopRight); };
+                BoxTemplate[y][x].OnDragStartVertexBottomLeft = async (e) => { await GetVertexDragStartMethod(captureX, captureY, HeyaStructVertexType.BottomLeft); };
+                BoxTemplate[y][x].OnDragStartVertexBottomRight = async (e) => { await GetVertexDragStartMethod(captureX, captureY, HeyaStructVertexType.BottomRight); };
+            }
+        }
+
+        base.OnInitialized();
+    }
 
     protected override async Task OnInitializedAsync()
     {
