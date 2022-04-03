@@ -17,12 +17,22 @@
         @for(int y=0; y<10; y++)
         {
             var captureY = y;
-            <tr>
+            <tr class="row">
                 @for(int x=0; x<10; x++)
                 {
                     var captureX = x;
 
-                    <td class="@TableUtility.HeyaTableDataAttribute(Heyas, x, y)" @onclick="() => OnClickTableCell(captureX, captureY)" draggable="true" @ondragstart="() => OnDragStartTableCell(captureX, captureY)" @ondrag="OnDragTableCell" @ondragend="OnDragEndTableCell">
+                    <td class="column">
+                        <div class="box" @onclick="() => OnClickTableCell(captureX, captureY)" draggable="true" @ondragstart="() => OnDragStartTableCellMove(captureX, captureY)" @ondrag="OnDragTableCell" @ondragend="OnDragEndTableCell">
+                            <div class="top" hidden="@HiddenEdge(captureX, captureY, HeyaStructEdgeType.Top)" draggable="true" @ondragstart="() => OnDragStartTableCellResizeTop(captureX, captureY)" @ondragstart:stopPropagation="true"></div>
+                            <div class="bottom" hidden="@HiddenEdge(captureX, captureY, HeyaStructEdgeType.Bottom)" draggable="true" @ondragstart="() => OnDragStartTableCellResizeBottom(captureX, captureY)" @ondragstart:stopPropagation="true"></div>
+                            <div class="left" hidden="@HiddenEdge(captureX, captureY, HeyaStructEdgeType.Left)" draggable="true" @ondragstart="() => OnDragStartTableCellResizeLeft(captureX, captureY)" @ondragstart:stopPropagation="true"></div>
+                            <div class="right" hidden="@HiddenEdge(captureX, captureY, HeyaStructEdgeType.Right)" draggable="true" @ondragstart="() => OnDragStartTableCellResizeRight(captureX, captureY)" @ondragstart:stopPropagation="true"></div>
+                            <div class="@GetVertexAttribute(captureX, captureY, HeyaStructVertexType.TopLeft)" hidden="@HiddenVertex(captureX, captureY, HeyaStructVertexType.TopLeft)" draggable="true" @ondragstart="() => GetVertexDragStartMethod(captureX, captureY, HeyaStructVertexType.TopLeft)" @ondragstart:stopPropagation="true"></div>
+                            <div class="@GetVertexAttribute(captureX, captureY, HeyaStructVertexType.TopRight)" hidden="@HiddenVertex(captureX, captureY, HeyaStructVertexType.TopRight)" draggable="true" @ondragstart="() => GetVertexDragStartMethod(captureX, captureY, HeyaStructVertexType.TopRight)" @ondragstart:stopPropagation="true"></div>
+                            <div class="@GetVertexAttribute(captureX, captureY, HeyaStructVertexType.BottomLeft)" hidden="@HiddenVertex(captureX, captureY, HeyaStructVertexType.BottomLeft)" draggable="true" @ondragstart="() => GetVertexDragStartMethod(captureX, captureY, HeyaStructVertexType.BottomLeft)" @ondragstart:stopPropagation="true"></div>
+                            <div class="@GetVertexAttribute(captureX, captureY, HeyaStructVertexType.BottomRight)" hidden="@HiddenVertex(captureX, captureY, HeyaStructVertexType.BottomRight)" draggable="true" @ondragstart="() => GetVertexDragStartMethod(captureX, captureY, HeyaStructVertexType.BottomRight)" @ondragstart:stopPropagation="true"></div>
+                        </div>
                     </td>
                 }
             </tr>
@@ -33,10 +43,27 @@
 <button @onclick="OnClickSaveButton">Save</button>
 
 @code {
+    private enum DragModeType
+    {
+        None,
+        Move,
+        ResizeTop,
+        ResizeBottom,
+        ResizeLeft,
+        ResizeRight,
+        ResizeTopLeftCross,
+        ResizeTopRightCross,
+        ResizeBottomLeftCross,
+        ResizeBottomRightCross,
+    }
+
     private string? UserId { get; set; }
     private List<Heya> Heyas { get; set; } = new List<Heya>();
+    private DragModeType CurrentDragModeType { get; set; }
     private Heya? CurrentDragHeya { get; set; }
-    private IJSObjectReference? Module { get; set; }
+    private IJSObjectReference? JavaScriptModule { get; set; }
+    private int TableWidth { get; set; }
+    private int TableHeight { get; set; }
     private int TableOffsetLeft { get; set; }
     private int TableOffsetTop { get; set; }
 
@@ -57,13 +84,64 @@
     {
         if (firstRender)
         {
-            Module = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/EditHeya.js");
+            JavaScriptModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/EditHeya.js");
 
-            TableOffsetLeft = await Module!.InvokeAsync<int>("getTableElementOffsetLeft");
-            TableOffsetTop = await Module!.InvokeAsync<int>("getTableElementOffsetTop");
+            TableOffsetLeft = await JavaScriptModule!.InvokeAsync<int>("getTableElementOffsetLeft");
+            TableOffsetTop = await JavaScriptModule!.InvokeAsync<int>("getTableElementOffsetTop");
         }
 
         await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private bool HiddenEdge(int x, int y, HeyaStructEdgeType edgeType)
+    {
+        return !TableUtility.ExistEdge(Heyas, x, y, edgeType);
+    }
+
+    private bool HiddenVertex(int x, int y, HeyaStructVertexType vertexType)
+    {
+        return !TableUtility.ExistVertex(Heyas, x, y, vertexType);
+    }
+
+    private string GetVertexAttribute(int x, int y, HeyaStructVertexType vertexType)
+    {
+        switch (TableUtility.GetVertexCrossType(Heyas, x, y, vertexType))
+        {
+            case HeyaStructVertexCrossType.None: return "";
+            case HeyaStructVertexCrossType.TopLeftTop: return "top-left-direction-top";
+            case HeyaStructVertexCrossType.TopLeftLeft: return "top-left-direction-left";
+            case HeyaStructVertexCrossType.TopLeftCross: return "top-left-direction-cross";
+            case HeyaStructVertexCrossType.TopRightTop: return "top-right-direction-top";
+            case HeyaStructVertexCrossType.TopRightRight: return "top-right-direction-right";
+            case HeyaStructVertexCrossType.TopRightCross: return "top-right-direction-cross";
+            case HeyaStructVertexCrossType.BottomLeftBottom: return "bottom-left-direction-bottom";
+            case HeyaStructVertexCrossType.BottomLeftLeft: return "bottom-left-direction-left";
+            case HeyaStructVertexCrossType.BottomLeftCross: return "bottom-left-direction-cross";
+            case HeyaStructVertexCrossType.BottomRightBottom: return "bottom-right-direction-bottom";
+            case HeyaStructVertexCrossType.BottomRightRight: return "bottom-right-direction-right";
+            case HeyaStructVertexCrossType.BottomRightCross: return "bottom-right-direction-cross";
+        }
+
+        return "";
+    }
+
+    private async Task GetVertexDragStartMethod(int x, int y, HeyaStructVertexType vertexType)
+    {
+        switch (TableUtility.GetVertexCrossType(Heyas, x, y, vertexType))
+        {
+            case HeyaStructVertexCrossType.TopLeftTop: await OnDragStartTableCellResizeTop(x, y); break;
+            case HeyaStructVertexCrossType.TopLeftLeft: await OnDragStartTableCellResizeLeft(x, y); break;
+            case HeyaStructVertexCrossType.TopLeftCross: await OnDragStartTableCellResizeTopLeftCross(x, y); break;
+            case HeyaStructVertexCrossType.TopRightTop: await OnDragStartTableCellResizeTop(x, y); break;
+            case HeyaStructVertexCrossType.TopRightRight: await OnDragStartTableCellResizeRight(x, y); break;
+            case HeyaStructVertexCrossType.TopRightCross: await OnDragStartTableCellResizeTopRightCross(x, y); break;
+            case HeyaStructVertexCrossType.BottomLeftBottom: await OnDragStartTableCellResizeBottom(x, y); break;
+            case HeyaStructVertexCrossType.BottomLeftLeft: await OnDragStartTableCellResizeLeft(x, y); break;
+            case HeyaStructVertexCrossType.BottomLeftCross: await OnDragStartTableCellResizeBottomLeftCross(x, y); break;
+            case HeyaStructVertexCrossType.BottomRightBottom: await OnDragStartTableCellResizeBottom(x, y); break;
+            case HeyaStructVertexCrossType.BottomRightRight: await OnDragStartTableCellResizeRight(x, y); break;
+            case HeyaStructVertexCrossType.BottomRightCross: await OnDragStartTableCellResizeBottomRightCross(x, y); break;
+        }
     }
 
     private void OnClickTableCell(int x, int y)
@@ -71,28 +149,248 @@
         Heyas.Add(new Heya() { Id = Guid.NewGuid(), Owner = UserId, Name = "", X = x, Y = y, Width = 1, Height = 1 });
     }
 
-    private void OnDragStartTableCell(int x, int y)
+    private void OnDragTableCell(DragEventArgs e)
     {
-        CurrentDragHeya = Heyas.SingleOrDefault(heya => ((heya.X <= x) && (x < heya.X + heya.Width) && (heya.Y <= y) && (y < heya.Y + heya.Height)));
-    }
-
-    private async void OnDragTableCell(DragEventArgs e)
-    {
-        int tableWidth = await Module!.InvokeAsync<int>("getTableElementWidth");
-        int tableHeight = await Module!.InvokeAsync<int>("getTableElementHeight");
-
         if (CurrentDragHeya == null)
         {
             return;
         }
 
-        CurrentDragHeya.X = (int)((e.PageX - TableOffsetLeft) / (tableWidth / 10));
-        CurrentDragHeya.Y = (int)((e.PageY - TableOffsetTop) / (tableHeight / 10));
+        switch (CurrentDragModeType)
+        {
+            case DragModeType.Move:
+                OnDragTableCellMove(e);
+                break;
+
+            case DragModeType.ResizeTop:
+                OnDragTableCellResizeTop(e);
+                break;
+
+            case DragModeType.ResizeBottom:
+                OnDragTableCellResizeBottom(e);
+                break;
+
+            case DragModeType.ResizeLeft:
+                OnDragTableCellResizeLeft(e);
+                break;
+
+            case DragModeType.ResizeRight:
+                OnDragTableCellResizeRight(e);
+                break;
+
+            case DragModeType.ResizeTopLeftCross:
+                OnDragTableCellResizeTopLeftCross(e);
+                break;
+
+            case DragModeType.ResizeTopRightCross:
+                OnDragTableCellResizeTopRightCross(e);
+                break;
+
+            case DragModeType.ResizeBottomLeftCross:
+                OnDragTableCellResizeBottomLeftCross(e);
+                break;
+
+            case DragModeType.ResizeBottomRightCross:
+                OnDragTableCellResizeBottomRightCross(e);
+                break;
+        }
+    }
+
+    private async Task OnDragStartTableCell(int x, int y, DragModeType dragModeType)
+    {
+        CurrentDragHeya = Heyas.SingleOrDefault(heya => ((heya.X <= x) && (x < heya.X + heya.Width) && (heya.Y <= y) && (y < heya.Y + heya.Height)));
+
+        CurrentDragModeType = dragModeType;
+
+        TableWidth = await JavaScriptModule!.InvokeAsync<int>("getTableElementWidth");
+        TableHeight = await JavaScriptModule!.InvokeAsync<int>("getTableElementHeight");
+    }
+
+    private async Task OnDragStartTableCellMove(int x, int y)
+    {
+        await OnDragStartTableCell(x, y, DragModeType.Move);
+    }
+
+    private bool IsEnablePageValue(double pageX, double pageY)
+    {
+        int x = (int)pageX;
+        int y = (int)pageY;
+
+        return ((pageX != 0) || (pageY != 0));
+    }
+
+    private void OnDragTableCellMove(DragEventArgs e)
+    {
+        if (!IsEnablePageValue(e.PageX, e.PageY))
+        {
+            return;
+        }
+
+        int x = (int)((e.PageX - TableOffsetLeft) / (TableWidth / 10));
+        int y = (int)((e.PageY - TableOffsetTop) / (TableHeight / 10));
+
+        if (x >= 0)
+        {
+            CurrentDragHeya!.X = x;
+        }
+
+        if (y >= 0)
+        {
+            CurrentDragHeya!.Y = y;
+        }
     }
 
     private void OnDragEndTableCell()
     {
         CurrentDragHeya = null;
+
+        CurrentDragModeType = DragModeType.None;
+    }
+
+    private async Task OnDragStartTableCellResizeTop(int x, int y)
+    {
+        await OnDragStartTableCell(x, y, DragModeType.ResizeTop);
+    }
+
+    private async Task OnDragStartTableCellResizeBottom(int x, int y)
+    {
+        await OnDragStartTableCell(x, y, DragModeType.ResizeBottom);
+    }
+
+    private async Task OnDragStartTableCellResizeLeft(int x, int y)
+    {
+        await OnDragStartTableCell(x, y, DragModeType.ResizeLeft);
+    }
+
+    private async Task OnDragStartTableCellResizeRight(int x, int y)
+    {
+        await OnDragStartTableCell(x, y, DragModeType.ResizeRight);
+    }
+
+    private async Task OnDragStartTableCellResizeTopLeftCross(int x, int y)
+    {
+        await OnDragStartTableCell(x, y, DragModeType.ResizeTopLeftCross);
+    }
+
+    private async Task OnDragStartTableCellResizeTopRightCross(int x, int y)
+    {
+        await OnDragStartTableCell(x, y, DragModeType.ResizeTopRightCross);
+    }
+
+    private async Task OnDragStartTableCellResizeBottomLeftCross(int x, int y)
+    {
+        await OnDragStartTableCell(x, y, DragModeType.ResizeBottomLeftCross);
+    }
+
+    private async Task OnDragStartTableCellResizeBottomRightCross(int x, int y)
+    {
+        await OnDragStartTableCell(x, y, DragModeType.ResizeBottomRightCross);
+    }
+
+    private void OnDragTableCellResizeLeft(DragEventArgs e)
+    {
+        if (!IsEnablePageValue(e.PageX, e.PageY))
+        {
+            return;
+        }
+
+        var x = (int)((e.PageX - TableOffsetLeft) / (TableWidth / 10));
+
+        if (x != CurrentDragHeya!.X)
+        {
+            var width = CurrentDragHeya.Width + (CurrentDragHeya.X - x);
+
+            if (width > 0)
+            {
+                CurrentDragHeya.Width = width;
+                CurrentDragHeya.X = x;
+            }
+        }
+    }
+
+    private void OnDragTableCellResizeRight(DragEventArgs e)
+    {
+        if (!IsEnablePageValue(e.PageX, e.PageY))
+        {
+            return;
+        }
+
+        var x = (int)((e.PageX - TableOffsetLeft) / (TableWidth / 10));
+
+        if (x != CurrentDragHeya!.X)
+        {
+            var width = (x - CurrentDragHeya.X);
+
+            if (width > 0)
+            {
+                CurrentDragHeya.Width = width;
+            }
+        }
+    }
+
+    private void OnDragTableCellResizeTop(DragEventArgs e)
+    {
+        if (!IsEnablePageValue(e.PageX, e.PageY))
+        {
+            return;
+        }
+
+        var y = (int)((e.PageY - TableOffsetTop) / (TableHeight / 10));
+
+        if (y != CurrentDragHeya!.Y)
+        {
+            var height = CurrentDragHeya.Height + (CurrentDragHeya.Y - y);
+
+            if (height > 0)
+            {
+                CurrentDragHeya.Height = height;
+                CurrentDragHeya.Y = y;
+            }
+        }
+    }
+
+    private void OnDragTableCellResizeBottom(DragEventArgs e)
+    {
+        if (!IsEnablePageValue(e.PageX, e.PageY))
+        {
+            return;
+        }
+
+        var y = (int)((e.PageY - TableOffsetTop) / (TableHeight / 10));
+
+        if (y != CurrentDragHeya!.Y)
+        {
+            var height = (y - CurrentDragHeya.Y);
+
+            if (height > 0)
+            {
+                CurrentDragHeya.Height = height;
+            }
+        }
+    }
+
+    private void OnDragTableCellResizeTopLeftCross(DragEventArgs e)
+    {
+        OnDragTableCellResizeLeft(e);
+        OnDragTableCellResizeTop(e);
+    }
+
+    private void OnDragTableCellResizeTopRightCross(DragEventArgs e)
+    {
+        OnDragTableCellResizeRight(e);
+        OnDragTableCellResizeTop(e);
+    }
+
+    private void OnDragTableCellResizeBottomLeftCross(DragEventArgs e)
+    {
+        OnDragTableCellResizeLeft(e);
+        OnDragTableCellResizeBottom(e);
+    }
+
+    private void OnDragTableCellResizeBottomRightCross(DragEventArgs e)
+    {
+        OnDragTableCellResizeRight(e);
+        OnDragTableCellResizeBottom(e);
     }
 
     private void OnClickSaveButton()
@@ -102,9 +400,9 @@
 
     async ValueTask IAsyncDisposable.DisposeAsync()
     {
-        if (Module is not null)
+        if (JavaScriptModule is not null)
         {
-            await Module.DisposeAsync();
+            await JavaScriptModule.DisposeAsync();
         }
     }
 }
