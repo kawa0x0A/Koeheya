@@ -17,30 +17,31 @@
         <tbody>
             @for(int y=0; y<10; y++)
             {
-                var captureY = y;
-
                 <tr>
                     @for(int x=0; x<10; x++)
                     {
-                        var captureX = x;
-
                         <td>
-                            <div class="box" @onclick="BoxTemplate[captureY][captureX].OnClickBox" draggable="true" @ondragstart="BoxTemplate[captureY][captureX].OnDragStartBox" @ondrag="OnDragTableCell" @ondragend="OnDragEndTableCell">
-                                <div class="top" hidden="@HiddenEdge(captureX, captureY, HeyaStructEdgeType.Top)" draggable="true" @ondragstart="BoxTemplate[captureY][captureX].OnDragStartEdgeTop" @ondragstart:stopPropagation="true"></div>
-                                <div class="bottom" hidden="@HiddenEdge(captureX, captureY, HeyaStructEdgeType.Bottom)" draggable="true" @ondragstart="BoxTemplate[captureY][captureX].OnDragStartEdgeBottom" @ondragstart:stopPropagation="true"></div>
-                                <div class="left" hidden="@HiddenEdge(captureX, captureY, HeyaStructEdgeType.Left)" draggable="true" @ondragstart="BoxTemplate[captureY][captureX].OnDragStartEdgeLeft" @ondragstart:stopPropagation="true"></div>
-                                <div class="right" hidden="@HiddenEdge(captureX, captureY, HeyaStructEdgeType.Right)" draggable="true" @ondragstart="BoxTemplate[captureY][captureX].OnDragStartEdgeRight" @ondragstart:stopPropagation="true"></div>
-                                <div class="@GetVertexAttribute(captureX, captureY, HeyaStructVertexType.TopLeft)" hidden="@HiddenVertex(captureX, captureY, HeyaStructVertexType.TopLeft)" draggable="true" @ondragstart="BoxTemplate[captureY][captureX].OnDragStartVertexTopLeft" @ondragstart:stopPropagation="true"></div>
-                                <div class="@GetVertexAttribute(captureX, captureY, HeyaStructVertexType.TopRight)" hidden="@HiddenVertex(captureX, captureY, HeyaStructVertexType.TopRight)" draggable="true" @ondragstart="BoxTemplate[captureY][captureX].OnDragStartVertexTopRight" @ondragstart:stopPropagation="true"></div>
-                                <div class="@GetVertexAttribute(captureX, captureY, HeyaStructVertexType.BottomLeft)" hidden="@HiddenVertex(captureX, captureY, HeyaStructVertexType.BottomLeft)" draggable="true" @ondragstart="BoxTemplate[captureY][captureX].OnDragStartVertexBottomLeft" @ondragstart:stopPropagation="true"></div>
-                                <div class="@GetVertexAttribute(captureX, captureY, HeyaStructVertexType.BottomRight)" hidden="@HiddenVertex(captureX, captureY, HeyaStructVertexType.BottomRight)" draggable="true" @ondragstart="BoxTemplate[captureY][captureX].OnDragStartVertexBottomRight" @ondragstart:stopPropagation="true"></div>
-                            </div>
                         </td>
                     }
                 </tr>
             }
         </tbody>
     </table>
+    <div style="@CreateHeyaRootDivStyleAttribute()" @onclick="OnClickTableCell">
+        @foreach(var heya in Heyas)
+        {
+            <div style="@CreateHeyaDivStyleAttribute(heya)" draggable="true" @ondragstart="async (e) => await OnDragStartTableCell(e, heya, DragModeType.Move)" @ondrag="OnDragTableCell" @ondragend="OnDragEndTableCell">
+                <div class="top" draggable="true" @ondragstart="async (e) => await OnDragStartTableCellResizeTop(e, heya)" @ondragstart:stopPropagation="true"></div>
+                <div class="bottom" draggable="true" @ondragstart="async (e) => await OnDragStartTableCellResizeBottom(e, heya)" @ondragstart:stopPropagation="true"></div>
+                <div class="left" draggable="true" @ondragstart="async (e) => await OnDragStartTableCellResizeLeft(e, heya)" @ondragstart:stopPropagation="true"></div>
+                <div class="right" draggable="true" @ondragstart="async (e) => await OnDragStartTableCellResizeRight(e, heya)" @ondragstart:stopPropagation="true"></div>
+                <div class="@GetVertexAttribute(heya.X, heya.Y, HeyaStructVertexType.TopLeft)" draggable="true" @ondragstart="async (e) => await GetVertexDragStartMethod(e, heya, HeyaStructVertexType.TopLeft)" @ondragstart:stopPropagation="true"></div>
+                <div class="@GetVertexAttribute(heya.X, heya.Y, HeyaStructVertexType.TopRight)" draggable="true" @ondragstart="async (e) => await GetVertexDragStartMethod(e, heya, HeyaStructVertexType.TopRight)" @ondragstart:stopPropagation="true"></div>
+                <div class="@GetVertexAttribute(heya.X, heya.Y, HeyaStructVertexType.BottomLeft)" draggable="true" @ondragstart="async (e) => await GetVertexDragStartMethod(e, heya, HeyaStructVertexType.BottomLeft)" @ondragstart:stopPropagation="true"></div>
+                <div class="@GetVertexAttribute(heya.X, heya.Y, HeyaStructVertexType.BottomRight)" draggable="true" @ondragstart="async (e) => await GetVertexDragStartMethod(e, heya, HeyaStructVertexType.BottomRight)" @ondragstart:stopPropagation="true"></div>
+            </div>
+        }
+    </div>
 </div>
 
 <button @onclick="OnClickSaveButton">Save</button>
@@ -60,22 +61,7 @@
         ResizeBottomRightCross,
     }
 
-    private class Box
-    {
-        public Action<MouseEventArgs> OnClickBox { get; set; } = (e) => { };
-        public Action<DragEventArgs> OnDragStartBox { get; set; } = (e) => { };
-        public Action<DragEventArgs> OnDragStartEdgeTop { get; set; } = (e) => { };
-        public Action<DragEventArgs> OnDragStartEdgeBottom { get; set; } = (e) => { };
-        public Action<DragEventArgs> OnDragStartEdgeLeft { get; set; } = (e) => { };
-        public Action<DragEventArgs> OnDragStartEdgeRight { get; set; } = (e) => { };
-        public Action<DragEventArgs> OnDragStartVertexTopLeft { get; set; } = (e) => { };
-        public Action<DragEventArgs> OnDragStartVertexTopRight { get; set; } = (e) => { };
-        public Action<DragEventArgs> OnDragStartVertexBottomLeft { get; set; } = (e) => { };
-        public Action<DragEventArgs> OnDragStartVertexBottomRight { get; set; } = (e) => { };
-    }
-
     private string? UserId { get; set; }
-    private Box[][] BoxTemplate { get; set; } = new Box[10][];
     private List<Heya> Heyas { get; set; } = new List<Heya>();
     private DragModeType CurrentDragModeType { get; set; }
     private Heya? CurrentDragHeya { get; set; }
@@ -84,37 +70,6 @@
     private int TableHeight { get; set; }
     private int TableOffsetLeft { get; set; }
     private int TableOffsetTop { get; set; }
-
-    protected override void OnInitialized()
-    {
-        // デリゲートの再生成を回避するために初期化処理の時点で定義する (イベントコールバックに直接ラムダ式を書くと部屋のドラッグ動作が重くなるので避ける)
-        for (int y = 0; y < 10; y++)
-        {
-            var captureY = y;
-
-            BoxTemplate[captureY] = new Box[10];
-
-            for (int x = 0; x < 10; x++)
-            {
-                var captureX = x;
-
-                BoxTemplate[y][x] = new Box();
-
-                BoxTemplate[y][x].OnClickBox = (e) => { OnClickTableCell(captureX, captureY); };
-                BoxTemplate[y][x].OnDragStartBox = async (e) => { await OnDragStartTableCellMove(captureX, captureY); };
-                BoxTemplate[y][x].OnDragStartEdgeTop = async (e) => { await OnDragStartTableCellResizeTop(captureX, captureY); };
-                BoxTemplate[y][x].OnDragStartEdgeBottom = async (e) => { await OnDragStartTableCellResizeBottom(captureX, captureY); };
-                BoxTemplate[y][x].OnDragStartEdgeLeft = async (e) => { await OnDragStartTableCellResizeLeft(captureX, captureY); };
-                BoxTemplate[y][x].OnDragStartEdgeRight = async (e) => { await OnDragStartTableCellResizeRight(captureX, captureY); };
-                BoxTemplate[y][x].OnDragStartVertexTopLeft = async (e) => { await GetVertexDragStartMethod(captureX, captureY, HeyaStructVertexType.TopLeft); };
-                BoxTemplate[y][x].OnDragStartVertexTopRight = async (e) => { await GetVertexDragStartMethod(captureX, captureY, HeyaStructVertexType.TopRight); };
-                BoxTemplate[y][x].OnDragStartVertexBottomLeft = async (e) => { await GetVertexDragStartMethod(captureX, captureY, HeyaStructVertexType.BottomLeft); };
-                BoxTemplate[y][x].OnDragStartVertexBottomRight = async (e) => { await GetVertexDragStartMethod(captureX, captureY, HeyaStructVertexType.BottomRight); };
-            }
-        }
-
-        base.OnInitialized();
-    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -137,19 +92,31 @@
 
             TableOffsetLeft = await JavaScriptModule!.InvokeAsync<int>("getTableElementOffsetLeft");
             TableOffsetTop = await JavaScriptModule!.InvokeAsync<int>("getTableElementOffsetTop");
+            TableWidth = await JavaScriptModule!.InvokeAsync<int>("getTableElementWidth");
+            TableHeight = await JavaScriptModule!.InvokeAsync<int>("getTableElementHeight");
         }
 
         await base.OnAfterRenderAsync(firstRender);
     }
 
-    private bool HiddenEdge(int x, int y, HeyaStructEdgeType edgeType)
+    private string CreateHeyaRootDivStyleAttribute()
     {
-        return !TableUtility.ExistEdge(Heyas, x, y, edgeType);
+        return $"margin: {-TableHeight}px 0px 0px 0px; width: {TableWidth}px; height: {TableHeight}px;";
     }
 
-    private bool HiddenVertex(int x, int y, HeyaStructVertexType vertexType)
+    private string CreateHeyaDivStyleAttribute(Heya heya)
     {
-        return !TableUtility.ExistVertex(Heyas, x, y, vertexType);
+        return $"margin: {heya.Y * 10}vw 0px 0px {heya.X * 10}vw; width: {heya.Width * 10}vw; height: {heya.Height * 10}vw; position: relative";
+    }
+
+    private int OffsetToX(double offsetX)
+    {
+        return (int)(offsetX / (TableWidth / 10));
+    }
+
+    private int OffsetToY(double offsetY)
+    {
+        return (int)(offsetY / (TableHeight / 10));
     }
 
     private string GetVertexAttribute(int x, int y, HeyaStructVertexType vertexType)
@@ -174,28 +141,28 @@
         return "";
     }
 
-    private async Task GetVertexDragStartMethod(int x, int y, HeyaStructVertexType vertexType)
+    private async Task GetVertexDragStartMethod(DragEventArgs e, Heya heya, HeyaStructVertexType vertexType)
     {
-        switch (TableUtility.GetVertexCrossType(Heyas, x, y, vertexType))
+        switch (TableUtility.GetVertexCrossType(Heyas, OffsetToX(e.OffsetX), OffsetToY(e.OffsetY), vertexType))
         {
-            case HeyaStructVertexCrossType.TopLeftTop: await OnDragStartTableCellResizeTop(x, y); break;
-            case HeyaStructVertexCrossType.TopLeftLeft: await OnDragStartTableCellResizeLeft(x, y); break;
-            case HeyaStructVertexCrossType.TopLeftCross: await OnDragStartTableCellResizeTopLeftCross(x, y); break;
-            case HeyaStructVertexCrossType.TopRightTop: await OnDragStartTableCellResizeTop(x, y); break;
-            case HeyaStructVertexCrossType.TopRightRight: await OnDragStartTableCellResizeRight(x, y); break;
-            case HeyaStructVertexCrossType.TopRightCross: await OnDragStartTableCellResizeTopRightCross(x, y); break;
-            case HeyaStructVertexCrossType.BottomLeftBottom: await OnDragStartTableCellResizeBottom(x, y); break;
-            case HeyaStructVertexCrossType.BottomLeftLeft: await OnDragStartTableCellResizeLeft(x, y); break;
-            case HeyaStructVertexCrossType.BottomLeftCross: await OnDragStartTableCellResizeBottomLeftCross(x, y); break;
-            case HeyaStructVertexCrossType.BottomRightBottom: await OnDragStartTableCellResizeBottom(x, y); break;
-            case HeyaStructVertexCrossType.BottomRightRight: await OnDragStartTableCellResizeRight(x, y); break;
-            case HeyaStructVertexCrossType.BottomRightCross: await OnDragStartTableCellResizeBottomRightCross(x, y); break;
+            case HeyaStructVertexCrossType.TopLeftTop: await OnDragStartTableCellResizeTop(e, heya); break;
+            case HeyaStructVertexCrossType.TopLeftLeft: await OnDragStartTableCellResizeLeft(e, heya); break;
+            case HeyaStructVertexCrossType.TopLeftCross: await OnDragStartTableCellResizeTopLeftCross(e, heya); break;
+            case HeyaStructVertexCrossType.TopRightTop: await OnDragStartTableCellResizeTop(e, heya); break;
+            case HeyaStructVertexCrossType.TopRightRight: await OnDragStartTableCellResizeRight(e, heya); break;
+            case HeyaStructVertexCrossType.TopRightCross: await OnDragStartTableCellResizeTopRightCross(e, heya); break;
+            case HeyaStructVertexCrossType.BottomLeftBottom: await OnDragStartTableCellResizeBottom(e, heya); break;
+            case HeyaStructVertexCrossType.BottomLeftLeft: await OnDragStartTableCellResizeLeft(e, heya); break;
+            case HeyaStructVertexCrossType.BottomLeftCross: await OnDragStartTableCellResizeBottomLeftCross(e, heya); break;
+            case HeyaStructVertexCrossType.BottomRightBottom: await OnDragStartTableCellResizeBottom(e, heya); break;
+            case HeyaStructVertexCrossType.BottomRightRight: await OnDragStartTableCellResizeRight(e, heya); break;
+            case HeyaStructVertexCrossType.BottomRightCross: await OnDragStartTableCellResizeBottomRightCross(e, heya); break;
         }
     }
 
-    private void OnClickTableCell(int x, int y)
+    private void OnClickTableCell(MouseEventArgs e)
     {
-        Heyas.Add(new Heya() { Id = Guid.NewGuid(), Owner = UserId, Name = "", X = x, Y = y, Width = 1, Height = 1 });
+        Heyas.Add(new Heya() { Id = Guid.NewGuid(), Owner = UserId, Name = "", X = OffsetToX(e.OffsetX), Y = OffsetToY(e.OffsetY), Width = 1, Height = 1 });
     }
 
     private void OnDragTableCell(DragEventArgs e)
@@ -245,19 +212,14 @@
         }
     }
 
-    private async Task OnDragStartTableCell(int x, int y, DragModeType dragModeType)
+    private async Task OnDragStartTableCell(DragEventArgs e, Heya heya, DragModeType dragModeType)
     {
-        CurrentDragHeya = Heyas.SingleOrDefault(heya => ((heya.X <= x) && (x < heya.X + heya.Width) && (heya.Y <= y) && (y < heya.Y + heya.Height)));
+        CurrentDragHeya = heya;
 
         CurrentDragModeType = dragModeType;
 
         TableWidth = await JavaScriptModule!.InvokeAsync<int>("getTableElementWidth");
         TableHeight = await JavaScriptModule!.InvokeAsync<int>("getTableElementHeight");
-    }
-
-    private async Task OnDragStartTableCellMove(int x, int y)
-    {
-        await OnDragStartTableCell(x, y, DragModeType.Move);
     }
 
     private bool IsEnablePageValue(double pageX, double pageY)
@@ -296,44 +258,44 @@
         CurrentDragModeType = DragModeType.None;
     }
 
-    private async Task OnDragStartTableCellResizeTop(int x, int y)
+    private async Task OnDragStartTableCellResizeTop(DragEventArgs e, Heya heya)
     {
-        await OnDragStartTableCell(x, y, DragModeType.ResizeTop);
+        await OnDragStartTableCell(e, heya, DragModeType.ResizeTop);
     }
 
-    private async Task OnDragStartTableCellResizeBottom(int x, int y)
+    private async Task OnDragStartTableCellResizeBottom(DragEventArgs e, Heya heya)
     {
-        await OnDragStartTableCell(x, y, DragModeType.ResizeBottom);
+        await OnDragStartTableCell(e, heya, DragModeType.ResizeBottom);
     }
 
-    private async Task OnDragStartTableCellResizeLeft(int x, int y)
+    private async Task OnDragStartTableCellResizeLeft(DragEventArgs e, Heya heya)
     {
-        await OnDragStartTableCell(x, y, DragModeType.ResizeLeft);
+        await OnDragStartTableCell(e, heya, DragModeType.ResizeLeft);
     }
 
-    private async Task OnDragStartTableCellResizeRight(int x, int y)
+    private async Task OnDragStartTableCellResizeRight(DragEventArgs e, Heya heya)
     {
-        await OnDragStartTableCell(x, y, DragModeType.ResizeRight);
+        await OnDragStartTableCell(e, heya, DragModeType.ResizeRight);
     }
 
-    private async Task OnDragStartTableCellResizeTopLeftCross(int x, int y)
+    private async Task OnDragStartTableCellResizeTopLeftCross(DragEventArgs e, Heya heya)
     {
-        await OnDragStartTableCell(x, y, DragModeType.ResizeTopLeftCross);
+        await OnDragStartTableCell(e, heya, DragModeType.ResizeTopLeftCross);
     }
 
-    private async Task OnDragStartTableCellResizeTopRightCross(int x, int y)
+    private async Task OnDragStartTableCellResizeTopRightCross(DragEventArgs e, Heya heya)
     {
-        await OnDragStartTableCell(x, y, DragModeType.ResizeTopRightCross);
+        await OnDragStartTableCell(e, heya, DragModeType.ResizeTopRightCross);
     }
 
-    private async Task OnDragStartTableCellResizeBottomLeftCross(int x, int y)
+    private async Task OnDragStartTableCellResizeBottomLeftCross(DragEventArgs e, Heya heya)
     {
-        await OnDragStartTableCell(x, y, DragModeType.ResizeBottomLeftCross);
+        await OnDragStartTableCell(e, heya, DragModeType.ResizeBottomLeftCross);
     }
 
-    private async Task OnDragStartTableCellResizeBottomRightCross(int x, int y)
+    private async Task OnDragStartTableCellResizeBottomRightCross(DragEventArgs e, Heya heya)
     {
-        await OnDragStartTableCell(x, y, DragModeType.ResizeBottomRightCross);
+        await OnDragStartTableCell(e, heya, DragModeType.ResizeBottomRightCross);
     }
 
     private void OnDragTableCellResizeLeft(DragEventArgs e)

@@ -58,23 +58,6 @@
             return false;
         }
 
-        public static bool ExistVertex(IEnumerable<Data.Heya> heyas, int x, int y, HeyaStructVertexType vertexType)
-        {
-            switch (vertexType)
-            {
-                case HeyaStructVertexType.TopLeft:
-                    return (ExistEdge(heyas, x, y, HeyaStructEdgeType.Top) || ExistEdge(heyas, x, y, HeyaStructEdgeType.Left));
-                case HeyaStructVertexType.TopRight:
-                    return (ExistEdge(heyas, x, y, HeyaStructEdgeType.Top) || ExistEdge(heyas, x, y, HeyaStructEdgeType.Right));
-                case HeyaStructVertexType.BottomLeft:
-                    return (ExistEdge(heyas, x, y, HeyaStructEdgeType.Bottom) || ExistEdge(heyas, x, y, HeyaStructEdgeType.Left));
-                case HeyaStructVertexType.BottomRight:
-                    return (ExistEdge(heyas, x, y, HeyaStructEdgeType.Bottom) || ExistEdge(heyas, x, y, HeyaStructEdgeType.Right));
-            }
-
-            return false;
-        }
-
         public static HeyaStructVertexCrossType GetVertexCrossType(IEnumerable<Data.Heya> heyas, int x, int y, HeyaStructVertexType vertexType)
         {
             switch (vertexType)

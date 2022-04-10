@@ -17,17 +17,19 @@ td {
 .left {
     position: absolute;
     border-left: 4px blue solid;
-    margin-top: 4px;
+    left: 0px;
+    top: 4px;
     width: 4px;
-    height: calc(10vw - 8px);
+    height: calc(100% - 8px);
     cursor: ew-resize;
 }
 
 .top {
     position: absolute;
     border-top: 4px blue solid;
-    margin-left: 4px;
-    width: calc(10vw - 8px);
+    left: 4px;
+    top: 0px;
+    width: calc(100% - 8px);
     height: 4px;
     cursor: ns-resize;
 }
@@ -35,19 +37,19 @@ td {
 .right {
     position: absolute;
     border-right: 4px blue solid;
-    margin-top: 4px;
-    margin-left: calc(10vw - 4px);
+    right: 0px;
+    top: 4px;
     width: 4px;
-    height: calc(10vw - 8px);
+    height: calc(100% - 8px);
     cursor: ew-resize;
 }
 
 .bottom {
     position: absolute;
     border-bottom: 4px blue solid;
-    margin-top: calc(10vw - 4px);
-    margin-left: 4px;
-    width: calc(10vw - 8px);
+    left: 4px;
+    bottom: 0px;
+    width: calc(100% - 8px);
     height: 4px;
     cursor: ns-resize;
 }
@@ -55,6 +57,8 @@ td {
 .top-left-direction-top {
     position: absolute;
     border-left: 4px red solid;
+    left: 0px;
+    top: 0px;
     width: 4px;
     height: 4px;
     cursor: n-resize;
@@ -63,6 +67,8 @@ td {
 .top-left-direction-left {
     position: absolute;
     border-left: 4px red solid;
+    left: 0px;
+    top: 0px;
     width: 4px;
     height: 4px;
     cursor: w-resize;
@@ -71,6 +77,8 @@ td {
 .top-left-direction-cross {
     position: absolute;
     border-left: 4px red solid;
+    left: 0px;
+    top: 0px;
     width: 4px;
     height: 4px;
     cursor: nw-resize;
@@ -79,7 +87,8 @@ td {
 .top-right-direction-top {
     position: absolute;
     border-right: 4px red solid;
-    margin-left: calc(10vw - 4px);
+    right: 0px;
+    top: 0px;
     width: 4px;
     height: 4px;
     cursor: n-resize;
@@ -88,7 +97,8 @@ td {
 .top-right-direction-right {
     position: absolute;
     border-right: 4px red solid;
-    margin-left: calc(10vw - 4px);
+    right: 0px;
+    top: 0px;
     width: 4px;
     height: 4px;
     cursor: e-resize;
@@ -97,7 +107,8 @@ td {
 .top-right-direction-cross {
     position: absolute;
     border-right: 4px red solid;
-    margin-left: calc(10vw - 4px);
+    right: 0px;
+    top: 0px;
     width: 4px;
     height: 4px;
     cursor: ne-resize;
@@ -106,7 +117,8 @@ td {
 .bottom-left-direction-bottom {
     position: absolute;
     border-left: 4px red solid;
-    margin-top: calc(10vw - 4px);
+    left: 0px;
+    bottom: 0px;
     width: 4px;
     height: 4px;
     cursor: s-resize;
@@ -115,7 +127,8 @@ td {
 .bottom-left-direction-left {
     position: absolute;
     border-left: 4px red solid;
-    margin-top: calc(10vw - 4px);
+    left: 0px;
+    bottom: 0px;
     width: 4px;
     height: 4px;
     cursor: w-resize;
@@ -124,7 +137,8 @@ td {
 .bottom-left-direction-cross {
     position: absolute;
     border-left: 4px red solid;
-    margin-top: calc(10vw - 4px);
+    left: 0px;
+    bottom: 0px;
     width: 4px;
     height: 4px;
     cursor: sw-resize;
@@ -133,8 +147,8 @@ td {
 .bottom-right-direction-bottom {
     position: absolute;
     border-right: 4px red solid;
-    margin-left: calc(10vw - 4px);
-    margin-top: calc(10vw - 4px);
+    right: 0px;
+    bottom: 0px;
     width: 4px;
     height: 4px;
     cursor: s-resize;
@@ -143,8 +157,8 @@ td {
 .bottom-right-direction-right {
     position: absolute;
     border-right: 4px red solid;
-    margin-left: calc(10vw - 4px);
-    margin-top: calc(10vw - 4px);
+    right: 0px;
+    bottom: 0px;
     width: 4px;
     height: 4px;
     cursor: e-resize;
@@ -153,8 +167,8 @@ td {
 .bottom-right-direction-cross {
     position: absolute;
     border-right: 4px red solid;
-    margin-left: calc(10vw - 4px);
-    margin-top: calc(10vw - 4px);
+    right: 0px;
+    bottom: 0px;
     width: 4px;
     height: 4px;
     cursor: se-resize;
