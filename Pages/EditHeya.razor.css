@@ -2,10 +2,15 @@
     display: table;
     width: 100vw;
     height: 100vw;
+    margin: 0px 0px 0px 0px;
 }
 
 td {
     padding: 0px;
+}
+
+.table-responsive {
+    position: relative;
 }
 
 .box {
@@ -54,26 +59,6 @@ td {
     cursor: ns-resize;
 }
 
-.top-left-direction-top {
-    position: absolute;
-    border-left: 4px red solid;
-    left: 0px;
-    top: 0px;
-    width: 4px;
-    height: 4px;
-    cursor: n-resize;
-}
-
-.top-left-direction-left {
-    position: absolute;
-    border-left: 4px red solid;
-    left: 0px;
-    top: 0px;
-    width: 4px;
-    height: 4px;
-    cursor: w-resize;
-}
-
 .top-left-direction-cross {
     position: absolute;
     border-left: 4px red solid;
@@ -82,26 +67,6 @@ td {
     width: 4px;
     height: 4px;
     cursor: nw-resize;
-}
-
-.top-right-direction-top {
-    position: absolute;
-    border-right: 4px red solid;
-    right: 0px;
-    top: 0px;
-    width: 4px;
-    height: 4px;
-    cursor: n-resize;
-}
-
-.top-right-direction-right {
-    position: absolute;
-    border-right: 4px red solid;
-    right: 0px;
-    top: 0px;
-    width: 4px;
-    height: 4px;
-    cursor: e-resize;
 }
 
 .top-right-direction-cross {
@@ -114,26 +79,6 @@ td {
     cursor: ne-resize;
 }
 
-.bottom-left-direction-bottom {
-    position: absolute;
-    border-left: 4px red solid;
-    left: 0px;
-    bottom: 0px;
-    width: 4px;
-    height: 4px;
-    cursor: s-resize;
-}
-
-.bottom-left-direction-left {
-    position: absolute;
-    border-left: 4px red solid;
-    left: 0px;
-    bottom: 0px;
-    width: 4px;
-    height: 4px;
-    cursor: w-resize;
-}
-
 .bottom-left-direction-cross {
     position: absolute;
     border-left: 4px red solid;
@@ -142,26 +87,6 @@ td {
     width: 4px;
     height: 4px;
     cursor: sw-resize;
-}
-
-.bottom-right-direction-bottom {
-    position: absolute;
-    border-right: 4px red solid;
-    right: 0px;
-    bottom: 0px;
-    width: 4px;
-    height: 4px;
-    cursor: s-resize;
-}
-
-.bottom-right-direction-right {
-    position: absolute;
-    border-right: 4px red solid;
-    right: 0px;
-    bottom: 0px;
-    width: 4px;
-    height: 4px;
-    cursor: e-resize;
 }
 
 .bottom-right-direction-cross {

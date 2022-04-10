@@ -35,10 +35,10 @@
                 <div class="bottom" draggable="true" @ondragstart="async (e) => await OnDragStartTableCellResizeBottom(e, heya)" @ondragstart:stopPropagation="true"></div>
                 <div class="left" draggable="true" @ondragstart="async (e) => await OnDragStartTableCellResizeLeft(e, heya)" @ondragstart:stopPropagation="true"></div>
                 <div class="right" draggable="true" @ondragstart="async (e) => await OnDragStartTableCellResizeRight(e, heya)" @ondragstart:stopPropagation="true"></div>
-                <div class="@GetVertexAttribute(heya.X, heya.Y, HeyaStructVertexType.TopLeft)" draggable="true" @ondragstart="async (e) => await GetVertexDragStartMethod(e, heya, HeyaStructVertexType.TopLeft)" @ondragstart:stopPropagation="true"></div>
-                <div class="@GetVertexAttribute(heya.X, heya.Y, HeyaStructVertexType.TopRight)" draggable="true" @ondragstart="async (e) => await GetVertexDragStartMethod(e, heya, HeyaStructVertexType.TopRight)" @ondragstart:stopPropagation="true"></div>
-                <div class="@GetVertexAttribute(heya.X, heya.Y, HeyaStructVertexType.BottomLeft)" draggable="true" @ondragstart="async (e) => await GetVertexDragStartMethod(e, heya, HeyaStructVertexType.BottomLeft)" @ondragstart:stopPropagation="true"></div>
-                <div class="@GetVertexAttribute(heya.X, heya.Y, HeyaStructVertexType.BottomRight)" draggable="true" @ondragstart="async (e) => await GetVertexDragStartMethod(e, heya, HeyaStructVertexType.BottomRight)" @ondragstart:stopPropagation="true"></div>
+                <div class="top-left-direction-cross" draggable="true" @ondragstart="async (e) => await OnDragStartTableCellResizeTopLeftCross(e, heya)" @ondragstart:stopPropagation="true"></div>
+                <div class="top-right-direction-cross" draggable="true" @ondragstart="async (e) => await OnDragStartTableCellResizeTopRightCross(e, heya)" @ondragstart:stopPropagation="true"></div>
+                <div class="bottom-left-direction-cross" draggable="true" @ondragstart="async (e) => await OnDragStartTableCellResizeBottomLeftCross(e, heya)" @ondragstart:stopPropagation="true"></div>
+                <div class="bottom-right-direction-cross" draggable="true" @ondragstart="async (e) => await OnDragStartTableCellResizeTopRightCross(e, heya)" @ondragstart:stopPropagation="true"></div>
             </div>
         }
     </div>
@@ -101,7 +101,7 @@
 
     private string CreateHeyaRootDivStyleAttribute()
     {
-        return $"margin: {-TableHeight}px 0px 0px 0px; width: {TableWidth}px; height: {TableHeight}px;";
+        return $"margin: {-TableHeight}px 0px 0px 0px; width: {TableWidth}px; height: {TableHeight}px; position: absolute";
     }
 
     private string CreateHeyaDivStyleAttribute(Heya heya)
@@ -117,47 +117,6 @@
     private int OffsetToY(double offsetY)
     {
         return (int)(offsetY / (TableHeight / 10));
-    }
-
-    private string GetVertexAttribute(int x, int y, HeyaStructVertexType vertexType)
-    {
-        switch (TableUtility.GetVertexCrossType(Heyas, x, y, vertexType))
-        {
-            case HeyaStructVertexCrossType.None: return "";
-            case HeyaStructVertexCrossType.TopLeftTop: return "top-left-direction-top";
-            case HeyaStructVertexCrossType.TopLeftLeft: return "top-left-direction-left";
-            case HeyaStructVertexCrossType.TopLeftCross: return "top-left-direction-cross";
-            case HeyaStructVertexCrossType.TopRightTop: return "top-right-direction-top";
-            case HeyaStructVertexCrossType.TopRightRight: return "top-right-direction-right";
-            case HeyaStructVertexCrossType.TopRightCross: return "top-right-direction-cross";
-            case HeyaStructVertexCrossType.BottomLeftBottom: return "bottom-left-direction-bottom";
-            case HeyaStructVertexCrossType.BottomLeftLeft: return "bottom-left-direction-left";
-            case HeyaStructVertexCrossType.BottomLeftCross: return "bottom-left-direction-cross";
-            case HeyaStructVertexCrossType.BottomRightBottom: return "bottom-right-direction-bottom";
-            case HeyaStructVertexCrossType.BottomRightRight: return "bottom-right-direction-right";
-            case HeyaStructVertexCrossType.BottomRightCross: return "bottom-right-direction-cross";
-        }
-
-        return "";
-    }
-
-    private async Task GetVertexDragStartMethod(DragEventArgs e, Heya heya, HeyaStructVertexType vertexType)
-    {
-        switch (TableUtility.GetVertexCrossType(Heyas, OffsetToX(e.OffsetX), OffsetToY(e.OffsetY), vertexType))
-        {
-            case HeyaStructVertexCrossType.TopLeftTop: await OnDragStartTableCellResizeTop(e, heya); break;
-            case HeyaStructVertexCrossType.TopLeftLeft: await OnDragStartTableCellResizeLeft(e, heya); break;
-            case HeyaStructVertexCrossType.TopLeftCross: await OnDragStartTableCellResizeTopLeftCross(e, heya); break;
-            case HeyaStructVertexCrossType.TopRightTop: await OnDragStartTableCellResizeTop(e, heya); break;
-            case HeyaStructVertexCrossType.TopRightRight: await OnDragStartTableCellResizeRight(e, heya); break;
-            case HeyaStructVertexCrossType.TopRightCross: await OnDragStartTableCellResizeTopRightCross(e, heya); break;
-            case HeyaStructVertexCrossType.BottomLeftBottom: await OnDragStartTableCellResizeBottom(e, heya); break;
-            case HeyaStructVertexCrossType.BottomLeftLeft: await OnDragStartTableCellResizeLeft(e, heya); break;
-            case HeyaStructVertexCrossType.BottomLeftCross: await OnDragStartTableCellResizeBottomLeftCross(e, heya); break;
-            case HeyaStructVertexCrossType.BottomRightBottom: await OnDragStartTableCellResizeBottom(e, heya); break;
-            case HeyaStructVertexCrossType.BottomRightRight: await OnDragStartTableCellResizeRight(e, heya); break;
-            case HeyaStructVertexCrossType.BottomRightCross: await OnDragStartTableCellResizeBottomRightCross(e, heya); break;
-        }
     }
 
     private void OnClickTableCell(MouseEventArgs e)
