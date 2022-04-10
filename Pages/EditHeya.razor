@@ -12,34 +12,36 @@
 
 <h3>EditHeya</h3>
 
-<table class="table table-bordered table-responsive">
-    <tbody>
-        @for(int y=0; y<10; y++)
-        {
-            var captureY = y;
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <tbody>
+            @for(int y=0; y<10; y++)
+            {
+                var captureY = y;
 
-            <tr class="row">
-                @for(int x=0; x<10; x++)
-                {
-                    var captureX = x;
+                <tr>
+                    @for(int x=0; x<10; x++)
+                    {
+                        var captureX = x;
 
-                    <td class="column">
-                        <div class="box" @onclick="BoxTemplate[captureY][captureX].OnClickBox" draggable="true" @ondragstart="BoxTemplate[captureY][captureX].OnDragStartBox" @ondrag="OnDragTableCell" @ondragend="OnDragEndTableCell">
-                            <div class="top" hidden="@HiddenEdge(captureX, captureY, HeyaStructEdgeType.Top)" draggable="true" @ondragstart="BoxTemplate[captureY][captureX].OnDragStartEdgeTop" @ondragstart:stopPropagation="true"></div>
-                            <div class="bottom" hidden="@HiddenEdge(captureX, captureY, HeyaStructEdgeType.Bottom)" draggable="true" @ondragstart="BoxTemplate[captureY][captureX].OnDragStartEdgeBottom" @ondragstart:stopPropagation="true"></div>
-                            <div class="left" hidden="@HiddenEdge(captureX, captureY, HeyaStructEdgeType.Left)" draggable="true" @ondragstart="BoxTemplate[captureY][captureX].OnDragStartEdgeLeft" @ondragstart:stopPropagation="true"></div>
-                            <div class="right" hidden="@HiddenEdge(captureX, captureY, HeyaStructEdgeType.Right)" draggable="true" @ondragstart="BoxTemplate[captureY][captureX].OnDragStartEdgeRight" @ondragstart:stopPropagation="true"></div>
-                            <div class="@GetVertexAttribute(captureX, captureY, HeyaStructVertexType.TopLeft)" hidden="@HiddenVertex(captureX, captureY, HeyaStructVertexType.TopLeft)" draggable="true" @ondragstart="BoxTemplate[captureY][captureX].OnDragStartVertexTopLeft" @ondragstart:stopPropagation="true"></div>
-                            <div class="@GetVertexAttribute(captureX, captureY, HeyaStructVertexType.TopRight)" hidden="@HiddenVertex(captureX, captureY, HeyaStructVertexType.TopRight)" draggable="true" @ondragstart="BoxTemplate[captureY][captureX].OnDragStartVertexTopRight" @ondragstart:stopPropagation="true"></div>
-                            <div class="@GetVertexAttribute(captureX, captureY, HeyaStructVertexType.BottomLeft)" hidden="@HiddenVertex(captureX, captureY, HeyaStructVertexType.BottomLeft)" draggable="true" @ondragstart="BoxTemplate[captureY][captureX].OnDragStartVertexBottomLeft" @ondragstart:stopPropagation="true"></div>
-                            <div class="@GetVertexAttribute(captureX, captureY, HeyaStructVertexType.BottomRight)" hidden="@HiddenVertex(captureX, captureY, HeyaStructVertexType.BottomRight)" draggable="true" @ondragstart="BoxTemplate[captureY][captureX].OnDragStartVertexBottomRight" @ondragstart:stopPropagation="true"></div>
-                        </div>
-                    </td>
-                }
-            </tr>
-        }
-    </tbody>
-</table>
+                        <td>
+                            <div class="box" @onclick="BoxTemplate[captureY][captureX].OnClickBox" draggable="true" @ondragstart="BoxTemplate[captureY][captureX].OnDragStartBox" @ondrag="OnDragTableCell" @ondragend="OnDragEndTableCell">
+                                <div class="top" hidden="@HiddenEdge(captureX, captureY, HeyaStructEdgeType.Top)" draggable="true" @ondragstart="BoxTemplate[captureY][captureX].OnDragStartEdgeTop" @ondragstart:stopPropagation="true"></div>
+                                <div class="bottom" hidden="@HiddenEdge(captureX, captureY, HeyaStructEdgeType.Bottom)" draggable="true" @ondragstart="BoxTemplate[captureY][captureX].OnDragStartEdgeBottom" @ondragstart:stopPropagation="true"></div>
+                                <div class="left" hidden="@HiddenEdge(captureX, captureY, HeyaStructEdgeType.Left)" draggable="true" @ondragstart="BoxTemplate[captureY][captureX].OnDragStartEdgeLeft" @ondragstart:stopPropagation="true"></div>
+                                <div class="right" hidden="@HiddenEdge(captureX, captureY, HeyaStructEdgeType.Right)" draggable="true" @ondragstart="BoxTemplate[captureY][captureX].OnDragStartEdgeRight" @ondragstart:stopPropagation="true"></div>
+                                <div class="@GetVertexAttribute(captureX, captureY, HeyaStructVertexType.TopLeft)" hidden="@HiddenVertex(captureX, captureY, HeyaStructVertexType.TopLeft)" draggable="true" @ondragstart="BoxTemplate[captureY][captureX].OnDragStartVertexTopLeft" @ondragstart:stopPropagation="true"></div>
+                                <div class="@GetVertexAttribute(captureX, captureY, HeyaStructVertexType.TopRight)" hidden="@HiddenVertex(captureX, captureY, HeyaStructVertexType.TopRight)" draggable="true" @ondragstart="BoxTemplate[captureY][captureX].OnDragStartVertexTopRight" @ondragstart:stopPropagation="true"></div>
+                                <div class="@GetVertexAttribute(captureX, captureY, HeyaStructVertexType.BottomLeft)" hidden="@HiddenVertex(captureX, captureY, HeyaStructVertexType.BottomLeft)" draggable="true" @ondragstart="BoxTemplate[captureY][captureX].OnDragStartVertexBottomLeft" @ondragstart:stopPropagation="true"></div>
+                                <div class="@GetVertexAttribute(captureX, captureY, HeyaStructVertexType.BottomRight)" hidden="@HiddenVertex(captureX, captureY, HeyaStructVertexType.BottomRight)" draggable="true" @ondragstart="BoxTemplate[captureY][captureX].OnDragStartVertexBottomRight" @ondragstart:stopPropagation="true"></div>
+                            </div>
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 
 <button @onclick="OnClickSaveButton">Save</button>
 
