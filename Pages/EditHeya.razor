@@ -27,10 +27,10 @@
             }
         </tbody>
     </table>
-    <div style="@CreateHeyaRootDivStyleAttribute()" @onclick="OnClickTableCell">
+    <div style="margin: -@(TableHeight)px 0px 0px 0px; width: @(TableWidth)px; height: @(TableHeight)px; position: absolute" @onclick="OnClickTableCell">
         @foreach(var heya in Heyas)
         {
-            <div style="@CreateHeyaDivStyleAttribute(heya)" draggable="true" @ondragstart="async (e) => await OnDragStartTableCell(e, heya, DragModeType.Move)" @ondrag="OnDragTableCell" @ondragend="OnDragEndTableCell">
+            <div style="margin: @(heya.Y * 10)vw 0px 0px @(heya.X * 10)vw; width: @(heya.Width * 10)vw; height: @(heya.Height * 10)vw; position: absolute" draggable="true" @ondragstart="async (e) => await OnDragStartTableCell(e, heya, DragModeType.Move)" @ondrag="OnDragTableCell" @ondragend="OnDragEndTableCell">
                 <div class="top" draggable="true" @ondragstart="async (e) => await OnDragStartTableCellResizeTop(e, heya)" @ondragstart:stopPropagation="true"></div>
                 <div class="bottom" draggable="true" @ondragstart="async (e) => await OnDragStartTableCellResizeBottom(e, heya)" @ondragstart:stopPropagation="true"></div>
                 <div class="left" draggable="true" @ondragstart="async (e) => await OnDragStartTableCellResizeLeft(e, heya)" @ondragstart:stopPropagation="true"></div>
@@ -97,16 +97,6 @@
         }
 
         await base.OnAfterRenderAsync(firstRender);
-    }
-
-    private string CreateHeyaRootDivStyleAttribute()
-    {
-        return $"margin: {-TableHeight}px 0px 0px 0px; width: {TableWidth}px; height: {TableHeight}px; position: absolute";
-    }
-
-    private string CreateHeyaDivStyleAttribute(Heya heya)
-    {
-        return $"margin: {heya.Y * 10}vw 0px 0px {heya.X * 10}vw; width: {heya.Width * 10}vw; height: {heya.Height * 10}vw; position: relative";
     }
 
     private int OffsetToX(double offsetX)
